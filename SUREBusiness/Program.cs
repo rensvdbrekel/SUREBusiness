@@ -22,7 +22,7 @@ namespace SUREBusiness
 				var context = services.GetRequiredService<DataContext>();
 				await context.Database.MigrateAsync();
 
-				//await Seed.SeedUsers(userManager);
+				await Seed.SeedUsers(context);
 			}
 			catch (Exception e)
 			{

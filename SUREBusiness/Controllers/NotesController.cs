@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
 using SUREBusiness.DTOs;
 using SUREBusiness.Entities;
 using SUREBusiness.Enums;
+using SUREBusiness.Helpers;
 using SUREBusiness.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace SUREBusiness.Controllers
 {
@@ -23,9 +27,9 @@ namespace SUREBusiness.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<Note>> GetNotes()
+		public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes([FromQuery] FilterParams filterParams)
 		{
-			var notes = await _noteRepository.GetNotes();
+			var notes = await _noteRepository.GetNotes(filterParams);
 			return Ok(notes);
 		}
 

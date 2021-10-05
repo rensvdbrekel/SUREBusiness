@@ -6,6 +6,8 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SUREBusiness.DTOs;
 using SUREBusiness.Entities;
+using SUREBusiness.Enums;
+using SUREBusiness.Helpers;
 using SUREBusiness.Interfaces;
 
 namespace SUREBusiness.Data
@@ -38,9 +40,20 @@ namespace SUREBusiness.Data
 				.SingleOrDefaultAsync(note => note.Id == id);
 		}
 
-		public async Task<IEnumerable<NoteDto>> GetNotes()
+		public async Task<IEnumerable<NoteDto>> GetNotes(FilterParams filterParams)
 		{
 			var query = _context.Notes.AsQueryable();
+			
+			if (filterParams.UserId > 0)
+			{
+			 query = query.Where(x => x.UserId == filterParams.UserId);
+			}
+
+			if (filterParams.Status != NoteStatus.Default)
+			{
+				query = query.Where(x => x.Status == filterParams.Status);
+			}
+
 			var notes = query.ProjectTo<NoteDto>(_mapper.ConfigurationProvider).AsNoTracking();
 
 			return await notes.ToListAsync();
